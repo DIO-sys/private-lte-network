@@ -1,0 +1,13 @@
+apiVersion: 1
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    jsonData:
+      version: Flux
+      organization: lte-network
+      defaultBucket: srsran
+    secureJsonData:
+      token: k2SdXSEPkb5_k29EZo8uHIo0Y_jXUKnlDtjClDvtFkhPqN2m-a-7X8HKjV5BMD0LV3o-y0NlTrxnQWjEWFhH8A==
+    isDefault: true

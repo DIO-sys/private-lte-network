@@ -1,0 +1,251 @@
+{
+  "dashboard": {
+    "title": "LTE Network Monitor",
+    "tags": ["lte", "srsran"],
+    "timezone": "browser",
+    "refresh": "5s",
+    "panels": [
+      {
+        "title": "Network Status",
+        "type": "stat",
+        "gridPos": {"h": 3, "w": 4, "x": 0, "y": 0},
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {"options": {"1": {"text": "ONLINE", "color": "green"}},
+               "type": "value"},
+              {"options": {"from": 0, "to": 0,
+               "result": {"text": "OFFLINE", "color": "red"}},
+               "type": "range"}
+            ],
+            "thresholds": {"steps": [
+              {"color": "red", "value": null},
+              {"color": "green", "value": 1}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -1m)\n  |> filter(fn: (r) => r._measurement == \"heartbeat\")\n  |> filter(fn: (r) => r._field == \"alive\")\n  |> last()", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "UE Count",
+        "type": "stat",
+        "gridPos": {"h": 3, "w": 4, "x": 4, "y": 0},
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {"steps": [
+              {"color": "red", "value": null},
+              {"color": "yellow", "value": 1},
+              {"color": "green", "value": 2}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -2m)\n  |> filter(fn: (r) => r._measurement == \"epc_state\")\n  |> filter(fn: (r) => r._field == \"ue_count\")\n  |> last()", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "Auth Failures",
+        "type": "stat",
+        "gridPos": {"h": 3, "w": 4, "x": 8, "y": 0},
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {"steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 1},
+              {"color": "red", "value": 5}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"epc_state\")\n  |> filter(fn: (r) => r._field == \"auth_failure\")\n  |> sum()", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "CPU Frequency",
+        "type": "stat",
+        "gridPos": {"h": 3, "w": 4, "x": 12, "y": 0},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "mhz",
+            "thresholds": {"steps": [
+              {"color": "red", "value": null},
+              {"color": "yellow", "value": 1800},
+              {"color": "green", "value": 2500}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -2m)\n  |> filter(fn: (r) => r._measurement == \"system\")\n  |> filter(fn: (r) => r._field == \"cpu_freq_mhz\")\n  |> last()", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "RAM Usage",
+        "type": "stat",
+        "gridPos": {"h": 3, "w": 4, "x": 16, "y": 0},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {"steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 70},
+              {"color": "red", "value": 90}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -2m)\n  |> filter(fn: (r) => r._measurement == \"system\")\n  |> filter(fn: (r) => r._field == \"ram_pct\")\n  |> last()", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "BladeRF Temperature",
+        "type": "gauge",
+        "gridPos": {"h": 3, "w": 4, "x": 20, "y": 0},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "celsius",
+            "min": 0, "max": 100,
+            "thresholds": {"steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 60},
+              {"color": "red", "value": 75}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -2m)\n  |> filter(fn: (r) => r._measurement == \"bladerf_hw\")\n  |> filter(fn: (r) => r._field == \"temperature\")\n  |> last()", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "CPU Cores",
+        "type": "bargauge",
+        "gridPos": {"h": 4, "w": 8, "x": 0, "y": 3},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0, "max": 100,
+            "thresholds": {"steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 70},
+              {"color": "red", "value": 95}
+            ]}
+          }
+        },
+        "options": {"orientation": "horizontal"},
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -2m)\n  |> filter(fn: (r) => r._measurement == \"system\")\n  |> filter(fn: (r) => r._field == \"cpu_pct\")\n  |> last()", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "CPU Frequency History",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 8, "x": 8, "y": 3},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "mhz",
+            "thresholds": {"steps": [
+              {"color": "red", "value": null},
+              {"color": "yellow", "value": 1800},
+              {"color": "green", "value": 2500}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"system\")\n  |> filter(fn: (r) => r._field == \"cpu_freq_mhz\")", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "System Temperature",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 8, "x": 16, "y": 3},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "celsius",
+            "thresholds": {"steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 80},
+              {"color": "red", "value": 90}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"system_temp\")\n  |> filter(fn: (r) => r._field == \"temp_c\")", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "Latency — Host to EPC",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 12, "x": 0, "y": 7},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms",
+            "thresholds": {"steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 100},
+              {"color": "red", "value": 200}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"latency\")\n  |> filter(fn: (r) => r._field == \"avg_ms\")", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "Sample Drops",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 12, "x": 12, "y": 7},
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {"steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 1},
+              {"color": "red", "value": 10}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"rf_health\")\n  |> filter(fn: (r) => r._field == \"sample_drops\")", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "SNR",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 12, "x": 0, "y": 11},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "dB",
+            "thresholds": {"steps": [
+              {"color": "red", "value": null},
+              {"color": "yellow", "value": 15},
+              {"color": "green", "value": 25}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"enb_phy_dl\")\n  |> filter(fn: (r) => r._field == \"snr\")", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "MOS Score",
+        "type": "gauge",
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 11},
+        "fieldConfig": {
+          "defaults": {
+            "min": 1, "max": 5,
+            "thresholds": {"steps": [
+              {"color": "red", "value": null},
+              {"color": "yellow", "value": 3.5},
+              {"color": "green", "value": 4.0}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"voice_quality\")\n  |> filter(fn: (r) => r._field == \"mos\")\n  |> last()", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      },
+      {
+        "title": "Jitter",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 11},
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms",
+            "thresholds": {"steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 20},
+              {"color": "red", "value": 50}
+            ]}
+          }
+        },
+        "targets": [{"refId": "A", "query": "from(bucket: \"srsran\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"voice_quality\")\n  |> filter(fn: (r) => r._field == \"jitter_ms\")", "datasource": {"type": "influxdb", "uid": "P951FEA4DE68E13C5"}}]
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "InfluxDB",
+          "type": "datasource",
+          "pluginId": "influxdb",
+          "current": {"text": "InfluxDB", "value": "InfluxDB"}
+        }
+      ]
+    }
+  },
+  "overwrite": true,
+  "folderId": 0
+}
