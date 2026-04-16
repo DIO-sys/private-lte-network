@@ -11,7 +11,15 @@ Private 4G LTE network built on Ubuntu using srsRAN 4G and BladeRF xA4.
 - 2x Bingfu 2.4GHz 8dBi SMA antennas
 
 ## Architecture
-Real phone (SM-G950FD + programmed SIM) ↓ RF over air (Band 4, 2110MHz) BladeRF xA4 ↓ srsENB (enb_bladerf.conf) → gtp 127.0.1.1 ↓ srsEPC → MME 127.0.1.100, SGi 172.16.0.1 Virtual UE (srsUE ZMQ) ↓ ZMQ sockets (ports 2004/2005) ↓ srsENB (enb2_zmq.conf) → gtp 127.0.1.2 ↓ baresip → Asterisk PBX
+Real phone (SM-G950FD + programmed SIM) 
+↓ RF over air (Band 4, 2110MHz) 
+BladeRF xA4 
+↓ srsENB (enb_bladerf.conf) → gtp 127.0.1.1 
+↓ srsEPC → MME 127.0.1.100, SGi 172.16.0.1 
+Virtual UE (srsUE ZMQ) 
+↓ ZMQ sockets (ports 2004/2005) 
+↓ srsENB (enb2_zmq.conf) → gtp 127.0.1.2 
+↓ baresip → Asterisk PBX
 
 ## Network Config
 | Parameter | Value |
@@ -70,6 +78,3 @@ cd private-lte-network
 - OYEITIMES SIM cards require Windows + GRSIMWrite for programming
 - Wine 10.0 on Ubuntu 25.10 has broken PC/SC passthrough
 - SM-G900V Verizon S5 was SIM locked → switched to SM-G950FD S8 Duos
-
-## File Structure
-├── install.sh ├── README.md ├── start_all.sh ├── stop_all.sh ├── kill_all.sh ├── fix_routing.sh ├── enb_bladerf.conf ├── enb2_zmq.conf ├── ue2_zmq.conf ├── epc.conf ├── user_db.csv ├── asterisk_pjsip_wizard.conf ├── asterisk_extensions.conf ├── asterisk_manager.conf ├── asterisk_logger.conf ├── baresip_config ├── baresip_accounts ├── baresip2_config ├── baresip2_accounts └── lte-dashboard/ ├── docker-compose.yml ├── lte_monitor.py ├── incident_capture.py ├── thresholds.py └── grafana/ └── provisioning/ └── datasources/ └── influxdb.yml
