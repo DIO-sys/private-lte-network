@@ -248,7 +248,7 @@ sudo tcpdump -i srs_spgw_sgi -w ~/sip_capture.pcap
 ## Known Issues
 
 ### Phone has difficulty finding network
-The eNB broadcasts SIB1/SIB2, connects to EPC, reports clean RF status, but no phone (Samsung S8 Exynos, Moto G Power Qualcomm, iPhone 13) can find the cell during manual network search. Root cause is suspected to be BladeRF VCTCXO frequency offset — the internal clock is slightly off from the target frequency, causing phones to fail PSS/SSS synchronization decode.
+The eNB broadcasts SIB1/SIB2, connects to EPC, reports clean RF status, but no phone (Samsung S8 Exynos, Moto G Power Qualcomm, iPhone 13) can find the cell during manual network search. Root cause is suspected to be BladeRF VCTCXO frequency offset — the internal clock is slightly off from the target frequency, causing phones to fail PSS/SSS synchronization decode at times .
 
 **Fixes that I've treid to no avail**
 1. Frequency offset sweep using `dl_freq`/`ul_freq` parameters
